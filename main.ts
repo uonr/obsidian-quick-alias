@@ -6,16 +6,11 @@ export default class AliasPlugin extends Plugin {
 			id: 'add-alias',
 			name: 'Add Alias',
 			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (!leaf) {
-					return false;
-				}
-				const viewState = leaf.getViewState();
-				if (!viewState || !viewState.state || viewState.state.mode !== "source") {
+				let view = this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (!view) {
 					return false;
 				}
 				if (!checking) {
-					const view = this.app.workspace.activeLeaf.view as MarkdownView;
 					const editor = view.sourceMode.cmEditor;
 					if (view.data.search(/^---\naliases:[\s\S]*\n---/) === -1) {
 						editor.replaceRange("---\naliases:\n- \n---\n", { line: 0, ch: 0 });
